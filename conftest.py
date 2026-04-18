@@ -26,14 +26,19 @@ def page():
 
         # Launch browser
         browser = p.chromium.launch(headless=False)
+        # Create isolated browser session
+        context = browser.contexts()
 
-        # Open new tab
-        page = browser.new_page()
+        # Open a new tab inside context
+        page = context.new_page()
 
         # Give page to test
         yield page
 
-        # Cleanup after test
+        # 🔹 Close context → closes all pages and clears session data
+        context.close()
+
+        # 🔹 Close browser → shuts down browser process completely
         browser.close()
 
         #hooks for global lifecycle control and fixtures for reusable test setup.
